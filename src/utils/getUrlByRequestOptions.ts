@@ -85,7 +85,9 @@ export function getUrlByRequestOptions(options: ResolvedRequestOptions): URL {
   debug('port', port)
   debug('path', path)
 
-  const baseUrl = `${protocol}//${host}`
+  // NOTE: as of node >= 17, hosts (including "localhost") can resolve to IPv6
+  // addresses, so construct valid URL by surrounding IPv6 host with brackets
+  const baseUrl = `${protocol}//${host.includes(':') ? `[${host}]` : host}`
   debug('base URL:', baseUrl)
 
   const url = options.uri ? new URL(options.uri.href) : new URL(path, baseUrl)
