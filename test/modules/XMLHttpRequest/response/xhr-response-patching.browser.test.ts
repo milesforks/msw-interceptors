@@ -48,7 +48,7 @@ test('responds to an HTTP request handled in the resolver', async () => {
 
   const [, response] = await callXMLHttpRequest({
     method: 'GET',
-    url: 'http://localhost/mocked',
+    url: 'http://127.0.0.1/mocked',
   })
 
   expect(response.status).toBe(200)

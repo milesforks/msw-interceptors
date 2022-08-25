@@ -5,7 +5,7 @@ const interceptor = new RemoteHttpInterceptor()
 interceptor.apply()
 
 function makeRequest() {
-  fetch('http://localhost/api')
+  fetch('http://127.0.0.1/api')
     .then((res) => res.json())
     .then((json) => {
       process.send(`done:${JSON.stringify(json)}`)
