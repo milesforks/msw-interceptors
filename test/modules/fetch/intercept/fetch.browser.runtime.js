@@ -2,6 +2,7 @@ import { FetchInterceptor } from '@mswjs/interceptors/lib/interceptors/fetch'
 
 const interceptor = new FetchInterceptor()
 interceptor.on('request', async (request) => {
+  console.log('DISPATCH REQUEST, href=', request.url.href)
   window.dispatchEvent(
     new CustomEvent('resolver', {
       detail: {

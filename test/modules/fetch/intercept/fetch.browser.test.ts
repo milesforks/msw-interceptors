@@ -48,7 +48,28 @@ afterAll(async () => {
 
 describe('HTTP', () => {
   test('intercepts an HTTP GET request', async () => {
-    const context = await prepareRuntime()
+    console.log('Prepare runtime and set context......:')
+    const context = await (async () => {
+      try {
+        console.log('Preparing runtime....')
+        return await prepareRuntime()
+      } catch (err) {
+        console.error('Failed to prepareRuntime:', err)
+        return
+      }
+    })()
+
+    console.log('GET THE FAILING URL...')
+    try {
+      console.log('ATTEMPT:', httpServer.http.url('/user?id=123'))
+    } catch (err) {
+      if (err instanceof TypeError) {
+        console.log('Caught type error serializing URL:', err)
+      } else {
+        console.log('Caught unknown error serializing URL:', err)
+      }
+    }
+
     const url = httpServer.http.url('/user?id=123')
     const [request, response] = await callFetch(context, url, {
       headers: {
