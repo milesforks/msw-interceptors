@@ -92,5 +92,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "peerDependencies": {
+    "undici": "^5.10.0"
   }
 }
