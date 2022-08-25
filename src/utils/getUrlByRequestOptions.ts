@@ -14,7 +14,7 @@ export type ResolvedRequestOptions = RequestOptions & RequestSelf
 
 export const DEFAULT_PATH = '/'
 const DEFAULT_PROTOCOL = 'http:'
-const DEFAULT_HOST = '127.0.0.1'
+const DEFAULT_HOST = 'localhost'
 const DEFAULT_PORT = 80
 const SSL_PORT = 443
 

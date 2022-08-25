@@ -154,7 +154,7 @@ test('emits the ENOTFOUND error connecting to a non-existing hostname given no m
 test('emits the ECONNREFUSED error connecting to an inactive server given no mocked response', (done) => {
   const emitter = new AsyncEventEmitter<HttpRequestEventMap>()
   const request = new NodeClientRequest(
-    normalizeClientRequestArgs('http:', 'http://127.0.0.1:12345'),
+    normalizeClientRequestArgs('http:', 'http://localhost:12345'),
     {
       emitter,
       log,
@@ -164,7 +164,7 @@ test('emits the ECONNREFUSED error connecting to an inactive server given no moc
   request.on('error', (error: ErrorConnectionRefused) => {
     expect(error.code).toEqual('ECONNREFUSED')
     expect(error.syscall).toEqual('connect')
-    expect(['127.0.0.1', '::1']).toContain(error.address)
+    expect(error.address).toEqual('127.0.0.1')
     expect(error.port).toEqual(12345)
 
     done()
@@ -203,7 +203,7 @@ test('does not emit ECONNREFUSED error connecting to an inactive server given mo
   const emitter = new AsyncEventEmitter<HttpRequestEventMap>()
   const handleError = jest.fn()
   const request = new NodeClientRequest(
-    normalizeClientRequestArgs('http:', 'http://127.0.0.1:9876'),
+    normalizeClientRequestArgs('http:', 'http://localhost:9876'),
     {
       emitter,
       log,

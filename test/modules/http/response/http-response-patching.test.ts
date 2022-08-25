@@ -68,7 +68,7 @@ afterAll(async () => {
 })
 
 test('supports response patching', async () => {
-  const req = http.get('http://127.0.0.1/mocked')
+  const req = http.get('http://localhost/mocked')
   const { res, text } = await waitForClientRequest(req)
 
   expect(res.statusCode).toBe(200)

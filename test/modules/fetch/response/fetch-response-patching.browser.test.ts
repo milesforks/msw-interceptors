@@ -45,7 +45,7 @@ it('supports response patching', async () => {
   const runtime = await prepareRuntime()
 
   const res = await runtime.page.evaluate(() => {
-    return fetch('http://127.0.0.1/mocked').then((res) => {
+    return fetch('http://localhost/mocked').then((res) => {
       return res.text().then((text) => {
         return {
           status: res.status,
