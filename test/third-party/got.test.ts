@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 import got from 'got'
-import { HttpServer } from '@open-draft/test-server/http'
+import { HttpServer } from '../TestHttpServer'
 import { ClientRequestInterceptor } from '../../src/interceptors/ClientRequest'
 
 const httpServer = new HttpServer((app) => {

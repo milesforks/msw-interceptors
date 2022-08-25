@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 import * as http from 'http'
-import { HttpServer } from '@open-draft/test-server/http'
+import { HttpServer } from '../../../TestHttpServer'
 import { BatchInterceptor, MockedResponse } from '../../../../src'
 import { ClientRequestInterceptor } from '../../../../src/interceptors/ClientRequest'
 import { XMLHttpRequestInterceptor } from '../../../../src/interceptors/XMLHttpRequest'

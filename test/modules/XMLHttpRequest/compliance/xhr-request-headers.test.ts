@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { HttpServer } from '@open-draft/test-server/http'
+import { HttpServer } from '../../../TestHttpServer'
 import { XMLHttpRequestInterceptor } from '../../../../src/interceptors/XMLHttpRequest'
 import { createXMLHttpRequest } from '../../../helpers'
 

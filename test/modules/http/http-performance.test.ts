@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-import { HttpServer } from '@open-draft/test-server/http'
+import { HttpServer } from '../../TestHttpServer'
 import { ClientRequestInterceptor } from '../../../src/interceptors/ClientRequest'
 import { httpGet, PromisifiedResponse } from '../../helpers'
 
