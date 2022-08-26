@@ -32,6 +32,23 @@ async function callFetch(
   url: string,
   init: RequestInit = {}
 ): Promise<[IsomorphicRequest, Response]> {
+  context.page.on('console', (msg) => console.log('CONSOLE:', `${msg.text()}`))
+
+  context.page.on('console', async (msg) => {
+    for (let i = 0; i < msg.args().length; ++i) {
+      const serializedArgs: unknown[] = []
+      await Promise.all(
+        msg.args().map(async (a) => {
+          serializedArgs.push(await a.jsonValue())
+        })
+      )
+
+      console.log('CONSOLE:', ...serializedArgs)
+
+      // console.log(`${i}: ${await msg.args()[i].jsonValue()}`)
+    }
+  })
+
   return Promise.all([
     extractRequestFromPage(context.page),
     context.request(url, init),

@@ -34,4 +34,51 @@ HttpServer.getServerAddress = function () {
   return address
 }
 
+// const x = OrigHttpServer.prototype.buildHttpServerApi =
+
+// @ts-ignore patch private method
+HttpServer.prototype.buildHttpServerApi = (
+  server: Parameters<typeof OrigHttpServer.getServerAddress>[0]
+) => {
+  console.log('WRAPPED buildHttpServerApi')
+  console.log(
+    'WRAPPED buildHttpServerApi, server hasKeys ',
+    Object.keys(server)
+  )
+  try {
+    console.log('WRAPPED server.address() =', server.address())
+  } catch {
+    console.log('WRAPPED error server missing key for host')
+  }
+  const address = HttpServer.getServerAddress(server)
+  console.log('WRAPPED buildHttpServerApi, address = ', address)
+  console.log('WRAPPED buildHttpServerApi, address.href = ', address.href)
+
+  return {
+    address,
+    url(path = '/') {
+      console.log('WRAPPED buildHttpServerApi, .url(), path = ', path)
+      try {
+        console.log('address.href = ', address.href)
+      } catch {
+        console.log('WRAPPED ERROR got bad address.href')
+      }
+
+      return new URL(path, address.href).href
+    },
+  }
+}
+
+// buildHttpServerApi(server) {
+//         const address = HttpServer.getServerAddress(server);
+//         return {
+//             address,
+//             url(path = '/') {
+//                 return new URL(path, address.href).href;
+//             },
+//         };
+//     }
+
+// HttpServer.prototype.http.url
+
 export { httpsAgent }

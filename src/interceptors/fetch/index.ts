@@ -37,6 +37,8 @@ export class FetchInterceptor extends Interceptor<HttpRequestEventMap> {
       'Failed to patch the "fetch" module: already patched.'
     )
 
+    console.log('SETUP patch')
+
     globalThis.fetch = async (input, init) => {
       const request = new Request(input, init)
 
