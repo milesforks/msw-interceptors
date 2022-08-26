@@ -40,10 +40,24 @@ export class FetchInterceptor extends Interceptor<HttpRequestEventMap> {
     globalThis.fetch = async (input, init) => {
       const request = new Request(input, init)
 
-      const url = typeof input === 'string' ? input : input.url
+      console.log('INTERCEPT globalThis.fetch, set url....')
+
+      const url =
+        typeof input === 'string'
+          ? input
+          : input instanceof URL
+          ? input.href
+          : input.url
+
+      console.log('INTERCEPT globalThis.fetch, set url.... = ', url)
       const method = request.method
 
       this.log('[%s] %s', method, url)
+
+      console.log(
+        'INTERCEPT globalThis.fetch, location.origin = ',
+        location.origin
+      )
 
       const body = await request.clone().arrayBuffer()
       const isomorphicRequest = new IsomorphicRequest(

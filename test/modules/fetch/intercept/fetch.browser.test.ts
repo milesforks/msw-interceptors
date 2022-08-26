@@ -49,16 +49,7 @@ afterAll(async () => {
 describe('HTTP', () => {
   test('intercepts an HTTP GET request', async () => {
     console.log('Prepare runtime and set context......:')
-    const context = await (async () => {
-      try {
-        console.log('Preparing runtime....')
-        return await prepareRuntime()
-      } catch (err) {
-        console.error('Failed to prepareRuntime:', err)
-        return
-      }
-    })()
-
+    const context = await prepareRuntime()
     console.log('GET THE FAILING URL...')
     try {
       console.log('ATTEMPT:', httpServer.http.url('/user?id=123'))
