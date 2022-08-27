@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 import fetch from 'node-fetch'
-import { HttpServer, httpsAgent } from '../../../TestHttpServer'
+import { HttpServer, httpsAgent } from '../../../patched/OpenDraftTestServer'
 import { ClientRequestInterceptor } from '../../../../src/interceptors/ClientRequest'
 
 const httpServer = new HttpServer((app) => {

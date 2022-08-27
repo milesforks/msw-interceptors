@@ -3,7 +3,7 @@
  */
 import * as path from 'path'
 import { RequestHandler } from 'express'
-import { HttpServer } from '../../../TestHttpServer'
+import { HttpServer } from '../../../patched/OpenDraftTestServer'
 import { Response, pageWith, ScenarioApi } from 'page-with'
 import { extractRequestFromPage } from '../../../helpers'
 import { IsomorphicRequest } from '../../../../src'

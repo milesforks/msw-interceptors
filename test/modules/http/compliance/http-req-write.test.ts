@@ -3,7 +3,7 @@
  */
 import * as http from 'http'
 import * as express from 'express'
-import { HttpServer } from '../../../TestHttpServer'
+import { HttpServer } from '../../../patched/OpenDraftTestServer'
 import { NodeClientRequest } from '../../../../src/interceptors/ClientRequest/NodeClientRequest'
 import { waitForClientRequest } from '../../../helpers'
 import { ClientRequestInterceptor } from '../../../../src/interceptors/ClientRequest'

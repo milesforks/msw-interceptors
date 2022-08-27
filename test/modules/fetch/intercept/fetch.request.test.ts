@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 import { Request } from 'node-fetch'
-import { HttpServer } from '../../../TestHttpServer'
+import { HttpServer } from '../../../patched/OpenDraftTestServer'
 import { HttpRequestEventMap } from '../../../../src'
 import { fetch } from '../../../helpers'
 import { anyUuid, headersContaining } from '../../../jest.expect'

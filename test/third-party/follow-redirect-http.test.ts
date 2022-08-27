@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { https } from 'follow-redirects'
-import { httpsAgent, HttpServer } from '../TestHttpServer'
+import { httpsAgent, HttpServer } from '../patched/OpenDraftTestServer'
 import { ClientRequestInterceptor } from '../../src/interceptors/ClientRequest'
 import type { HttpRequestEventMap } from '../../src/glossary'
 import { waitForClientRequest } from '../helpers'

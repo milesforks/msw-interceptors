@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import type { RequestHandler } from 'express'
-import { HttpServer } from '../../../TestHttpServer'
+import { HttpServer } from '../../../patched/OpenDraftTestServer'
 import { IsomorphicRequest } from '../../../../src'
 import {
   XMLHttpRequestEventListener,

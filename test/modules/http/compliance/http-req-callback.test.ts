@@ -3,7 +3,7 @@
  */
 import { IncomingMessage } from 'http'
 import * as https from 'https'
-import { HttpServer, httpsAgent } from '../../../TestHttpServer'
+import { HttpServer, httpsAgent } from '../../../patched/OpenDraftTestServer'
 import { getRequestOptionsByUrl } from '../../../../src/utils/getRequestOptionsByUrl'
 import { ClientRequestInterceptor } from '../../../../src/interceptors/ClientRequest'
 

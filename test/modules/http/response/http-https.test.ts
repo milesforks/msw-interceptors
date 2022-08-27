@@ -3,7 +3,7 @@
  */
 import * as http from 'http'
 import * as https from 'https'
-import { HttpServer, httpsAgent } from '../../../TestHttpServer'
+import { HttpServer, httpsAgent } from '../../../patched/OpenDraftTestServer'
 import { waitForClientRequest } from '../../../helpers'
 import { ClientRequestInterceptor } from '../../../../src/interceptors/ClientRequest'
 

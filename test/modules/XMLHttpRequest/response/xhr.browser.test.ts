@@ -3,7 +3,7 @@
  */
 import * as path from 'path'
 import { pageWith } from 'page-with'
-import { HttpServer } from '../../../TestHttpServer'
+import { HttpServer } from '../../../patched/OpenDraftTestServer'
 import {
   createBrowserXMLHttpRequest,
   createRawBrowserXMLHttpRequest,
