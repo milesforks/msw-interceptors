@@ -7,13 +7,22 @@ var origGetServerAddress = OrigHttpServer.getServerAddress
 
 export const HttpServer = OrigHttpServer
 
+const IS_PATCHED_IPV6_COMPAT: unique symbol = Symbol('isPatchedIPv6Compat')
+
+type PatchedForIPv6Compat<Method> = Method & {
+  [IS_PATCHED_IPV6_COMPAT]?: true
+}
+
+// @ts-ignore if this works i'll augment it
+if (HttpServer.getServerAddress[IS_PATCHED_IPV6_COMPAT]) {
+  console.log('DUPLICATE PATCH: HttpServer.getServerAddress')
+}
+
 HttpServer.getServerAddress = function () {
   const address = origGetServerAddress.apply(
-    this,
+    {}, // we're patching a static method; there is no this
     arguments as unknown as Parameters<typeof HttpServer.getServerAddress>
   )
-
-  console.log('CALL WRAPPED VERSION FOR ADDRESS.HOST =', address.host)
 
   Object.defineProperty(address, 'href', {
     get() {
@@ -32,53 +41,27 @@ HttpServer.getServerAddress = function () {
   })
 
   return address
+} as PatchedForIPv6Compat<typeof HttpServer.getServerAddress>
+
+// @ts-ignore if this works i'll augment it
+if (HttpServer.prototype.buildHttpServerApi[IS_PATCHED_IPV6_COMPAT]) {
+  console.log('DUPLICATE PATCH: HttpServer.prototype.buildHttpServerApi')
 }
 
-// const x = OrigHttpServer.prototype.buildHttpServerApi =
-
-// @ts-ignore patch private method
-HttpServer.prototype.buildHttpServerApi = (
+// NOTE: This method is the same as the original, except we need to re-implement
+// it so that it can call the newly patched static HttpServer.getServerAddress
+// @ts-ignore patching a private method
+HttpServer.prototype.buildHttpServerApi = ((
   server: Parameters<typeof OrigHttpServer.getServerAddress>[0]
 ) => {
-  console.log('WRAPPED buildHttpServerApi')
-  console.log(
-    'WRAPPED buildHttpServerApi, server hasKeys ',
-    Object.keys(server)
-  )
-  try {
-    console.log('WRAPPED server.address() =', server.address())
-  } catch {
-    console.log('WRAPPED error server missing key for host')
-  }
   const address = HttpServer.getServerAddress(server)
-  console.log('WRAPPED buildHttpServerApi, address = ', address)
-  console.log('WRAPPED buildHttpServerApi, address.href = ', address.href)
 
   return {
     address,
     url(path = '/') {
-      console.log('WRAPPED buildHttpServerApi, .url(), path = ', path)
-      try {
-        console.log('address.href = ', address.href)
-      } catch {
-        console.log('WRAPPED ERROR got bad address.href')
-      }
-
       return new URL(path, address.href).href
     },
   }
-}
-
-// buildHttpServerApi(server) {
-//         const address = HttpServer.getServerAddress(server);
-//         return {
-//             address,
-//             url(path = '/') {
-//                 return new URL(path, address.href).href;
-//             },
-//         };
-//     }
-
-// HttpServer.prototype.http.url
+}) as PatchedForIPv6Compat<typeof HttpServer.prototype['buildHttpServerApi']>
 
 export { httpsAgent }

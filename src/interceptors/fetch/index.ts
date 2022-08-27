@@ -37,12 +37,8 @@ export class FetchInterceptor extends Interceptor<HttpRequestEventMap> {
       'Failed to patch the "fetch" module: already patched.'
     )
 
-    console.log('SETUP patch')
-
     globalThis.fetch = async (input, init) => {
       const request = new Request(input, init)
-
-      console.log('INTERCEPT globalThis.fetch, set url....')
 
       const url =
         typeof input === 'string'
@@ -51,7 +47,6 @@ export class FetchInterceptor extends Interceptor<HttpRequestEventMap> {
           ? input.href
           : input.url
 
-      console.log('INTERCEPT globalThis.fetch, set url.... = ', url)
       const method = request.method
 
       this.log('[%s] %s', method, url)

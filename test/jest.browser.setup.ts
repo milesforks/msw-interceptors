@@ -1,19 +1,16 @@
+import { debug } from 'debug'
 import { createBrowser, CreateBrowserApi, server } from 'page-with'
 import webpackConfig from './webpack.config'
 
 let browser: CreateBrowserApi
 
 beforeAll(async () => {
-  console.log(
-    'createBrowser, current server.connectionInfo =',
-    server?.connectionInfo
-  )
   browser = await createBrowser({
     launchOptions: {
       args: ['--allow-insecure-localhost'],
       logger: {
         isEnabled: () => true,
-        log: (...args) => console.log('BROWSER:', ...args),
+        log: (...args) => debug('browser')('BROWSER:', ...args),
       },
     },
     serverOptions: {
@@ -31,10 +28,11 @@ beforeAll(async () => {
     if (conn.host.includes(':') && !conn.url.includes(`[${conn.host}]`)) {
       // note: scheme is hardcoded to `http` to match `PreviewServer.listen()`
       server!.connectionInfo!.url = `http://[${conn.host}]:${conn.port}`
-      console.log('PATCH CONNECTION, new URL<conn.url> = ', conn.url)
+      console.log(`PATCH CONNECTION, new URL<conn.url> = ${conn.url}`)
       console.log(
-        'PATCH CONNECTION, new URL<server!.connectionInfo!.url> = ',
-        server!.connectionInfo!.url
+        `PATCH CONNECTION, new URL<server!.connectionInfo!.url> = ${
+          server!.connectionInfo!.url
+        }`
       )
     }
 
@@ -42,8 +40,7 @@ beforeAll(async () => {
   })
 
   console.log(
-    'createBrowser, new server.connectionInfo =',
-    server?.connectionInfo
+    `createBrowser, new server.connectionInfo = ${server?.connectionInfo}`
   )
 })
 
