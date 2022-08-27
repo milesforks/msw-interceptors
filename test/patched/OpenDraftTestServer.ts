@@ -7,16 +7,15 @@ var origGetServerAddress = OrigHttpServer.getServerAddress
 
 export const HttpServer = OrigHttpServer
 
-const IS_PATCHED_IPV6_COMPAT: unique symbol = Symbol('isPatchedIPv6Compat')
+// const IS_PATCHED_IPV6_COMPAT: unique symbol = Symbol('isPatchedIPv6Compat')
 
-type PatchedForIPv6Compat<Method> = Method & {
-  [IS_PATCHED_IPV6_COMPAT]?: true
-}
+// type PatchedForIPv6Compat<Method> = Method & {
+//   [IS_PATCHED_IPV6_COMPAT]?: true
+// }
 
-// @ts-ignore if this works i'll augment it
-if (HttpServer.getServerAddress[IS_PATCHED_IPV6_COMPAT]) {
-  console.log('DUPLICATE PATCH: HttpServer.getServerAddress')
-}
+// if (HttpServer.getServerAddress[IS_PATCHED_IPV6_COMPAT]) {
+//   console.log('DUPLICATE PATCH: HttpServer.getServerAddress')
+// }
 
 HttpServer.getServerAddress = function () {
   const address = origGetServerAddress.apply(
@@ -41,17 +40,19 @@ HttpServer.getServerAddress = function () {
   })
 
   return address
-} as PatchedForIPv6Compat<typeof HttpServer.getServerAddress>
+}
+
+// as PatchedForIPv6Compat<typeof HttpServer.getServerAddress>
 
 // @ts-ignore if this works i'll augment it
-if (HttpServer.prototype.buildHttpServerApi[IS_PATCHED_IPV6_COMPAT]) {
-  console.log('DUPLICATE PATCH: HttpServer.prototype.buildHttpServerApi')
-}
+// if (HttpServer.prototype.buildHttpServerApi[IS_PATCHED_IPV6_COMPAT]) {
+//   console.log('DUPLICATE PATCH: HttpServer.prototype.buildHttpServerApi')
+// }
 
 // NOTE: This method is the same as the original, except we need to re-implement
 // it so that it can call the newly patched static HttpServer.getServerAddress
 // @ts-ignore patching a private method
-HttpServer.prototype.buildHttpServerApi = ((
+HttpServer.prototype.buildHttpServerApi = (
   server: Parameters<typeof OrigHttpServer.getServerAddress>[0]
 ) => {
   const address = HttpServer.getServerAddress(server)
@@ -62,6 +63,8 @@ HttpServer.prototype.buildHttpServerApi = ((
       return new URL(path, address.href).href
     },
   }
-}) as PatchedForIPv6Compat<typeof HttpServer.prototype['buildHttpServerApi']>
+}
+
+// as PatchedForIPv6Compat<typeof HttpServer.prototype['buildHttpServerApi']>
 
 export { httpsAgent }
