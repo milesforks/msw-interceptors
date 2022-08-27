@@ -40,7 +40,8 @@ beforeAll(async () => {
   })
 
   console.log(
-    `createBrowser, new server.connectionInfo = ${server?.connectionInfo}`
+    'createBrowser, new server.connectionInfo',
+    server?.connectionInfo
   )
 })
 
