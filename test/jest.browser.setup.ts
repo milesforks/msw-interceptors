@@ -18,7 +18,7 @@ beforeAll(async () => {
       webpackConfig,
     },
   }).then(
-    // NOTE: when upstream patch is fixed, remove this promise
+    // NOTE: when upstream patch is fixed, remove this last promise handler
     (browser) => {
       patchServerConnectionInfo(
         // note: we know server connection is up because createBrowser waited `until`

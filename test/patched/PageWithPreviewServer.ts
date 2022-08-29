@@ -1,11 +1,3 @@
-type PreviewServer = {
-  connectionInfo: {
-    port: number
-    host: string
-    url: string
-  }
-}
-
 /**
  * Patch the `server` variable from `page-with/server`, which is a mutable
  * variable that is updated during execution of `createBrowser` to contain
@@ -27,5 +19,18 @@ export const patchServerConnectionInfo = (server: PreviewServer) => {
   if (conn.host.includes(':') && !conn.url.includes(`[${conn.host}]`)) {
     // note: scheme is hardcoded to `http` to match `PreviewServer.listen()`
     server!.connectionInfo!.url = `http://[${conn.host}]:${conn.port}`
+  }
+}
+
+/**
+ * This is the same as the upstream type (but non-nullable), but we don't import
+ * from `page-with` because we we want to access its mutable `server` export,
+ * which gets messy if we import from thw file twice (could access wrong closure)
+ */
+type PreviewServer = {
+  connectionInfo: {
+    port: number
+    host: string
+    url: string
   }
 }

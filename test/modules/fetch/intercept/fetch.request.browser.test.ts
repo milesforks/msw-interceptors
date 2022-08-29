@@ -15,9 +15,7 @@ const httpServer = new HttpServer((app) => {
 })
 
 beforeAll(async () => {
-  const connectionInfo = await httpServer.listen()
-
-  console.log('CONNECTION INFO:', connectionInfo)
+  await httpServer.listen()
 })
 
 afterAll(async () => {
