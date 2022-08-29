@@ -30,6 +30,7 @@ type PatchedBuildHttpServerApi = PatchedForIPv6Compat<
  * DNS resolution order, so some dual-stack hosts will resolve addresses including
  * `localhost` to `::1`, causing `HttpServer` to bind to `::1` instead of `127.0.0.1`.
  *
+
  * This patch is a work-around until the upstream bug is fixed in the
  * `@open-draft/test-server` package.
  *

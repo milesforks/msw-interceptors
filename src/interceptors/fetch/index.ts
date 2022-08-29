@@ -51,11 +51,6 @@ export class FetchInterceptor extends Interceptor<HttpRequestEventMap> {
 
       this.log('[%s] %s', method, url)
 
-      console.log(
-        'INTERCEPT globalThis.fetch, location.origin = ',
-        location.origin
-      )
-
       const body = await request.clone().arrayBuffer()
       const isomorphicRequest = new IsomorphicRequest(
         new URL(url, location.origin),
