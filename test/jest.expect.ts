@@ -5,8 +5,15 @@ import { HeadersObject } from 'headers-polyfill'
  * A custom asymetric matcher that asserts the `Headers` object.
  */
 class HeadersContaining extends AsymmetricMatcher<Record<string, unknown>> {
-  constructor(sample: Record<string, unknown>, inverse = false) {
-    super(sample, inverse)
+  constructor(
+    sample: Record<string, unknown> | { raw(): Record<string, unknown> },
+    inverse = false
+  ) {
+    if (sample.hasOwnProperty('raw') && typeof sample.raw === 'function') {
+      super(sample.raw(), inverse)
+    } else {
+      super(sample, inverse)
+    }
   }
 
   asymmetricMatch(other: Headers) {
