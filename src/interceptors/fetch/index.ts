@@ -53,7 +53,10 @@ export class FetchInterceptor extends Interceptor<HttpRequestEventMap> {
 
       const body = await request.clone().arrayBuffer()
       const isomorphicRequest = new IsomorphicRequest(
-        new URL(url, location.origin),
+        new URL(
+          url,
+          typeof location !== 'undefined' ? location.origin : undefined
+        ),
         {
           body,
           method,
