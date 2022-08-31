@@ -1,0 +1,47 @@
+name: ci
+on:
+  push:
+    branches: [make-patch/*]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Unit tests
+        run: yarn test:internal
+
+      - name: Build
+        run: yarn build
+
+      - name: Node.js tests
+        run: yarn test:integration:node
+
+      - name: Browser tests
+        run: yarn test:integration:browser
+
+      - name: Pack tarball
+        run: yarn pack --prod --frozen-lockfile --verbose --filename "msw-interceptors-$GITHUB_SHA"
+
+      - name: Setup Git
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Switch branch and commit tarball
+        run: |
+          git add "msw-interceptors-$GITHUB_SHA.tgz"
+          git commit -m "Add tarball to branch"
+          git push origin +HEAD:"released/$GITHUB_REF_NAME"
