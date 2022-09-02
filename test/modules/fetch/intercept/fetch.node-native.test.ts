@@ -50,8 +50,6 @@ afterAll(async () => {
 })
 
 test('intercepts an HTTP HEAD request', async () => {
-  console.log('httpServer.http.url(/user) = ', httpServer.http.url('/user'))
-
   await fetch(httpServer.http.url('/user?id=123'), {
     method: 'HEAD',
     headers: {
@@ -212,9 +210,6 @@ test('intercepts an HTTP PATCH request', async () => {
 
 test('can get the https url', async () => {
   const httpsUrl = httpServer.https.url('/user?id=123')
-
-  console.log('httpsUrl ----->', httpsUrl)
-
   expect(httpsUrl).toBeDefined()
 })
 
