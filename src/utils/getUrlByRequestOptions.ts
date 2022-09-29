@@ -68,13 +68,53 @@ function getAuthByRequestOptions(options: ResolvedRequestOptions) {
   }
 }
 
+function isValidURL(url?: string) {
+  try {
+    new URL(url ?? '')
+    return true
+  } catch {
+    return false
+  }
+}
+
 /**
- * Returns true if host looks like an IPv6 address without surrounding brackets
- * It assumes any host containing `:` is definitely not IPv4 and probably IPv6,
- * but note that this could include invalid IPv6 addresses as well.
+ * Encode a URI by surrounding an IPv6 host with brackets if it seems necessary
+ *
+ * In this context, `host` could be `hostname` or `hostname:port`,
+ * and `hostname` may be a bracketed or unbracketed IPv6 address.
+ *
+ * If `host` appears to include an unbracketed IPv6 address,
+ * add the brackets and return the string.
  */
-function isRawIPv6Address(host: string) {
-  return host.includes(':') && !host.startsWith('[') && !host.endsWith(']')
+function uriEncodedHost(host: string) {
+  const definitelyNotIPv6 = !host.includes(':')
+  if (definitelyNotIPv6) {
+    return host
+  }
+
+  const alreadyHasOrderedBracketPair =
+    host
+      .split('')
+      .filter((x) => ['[', ']'].includes(x))
+      .join('') === '[]'
+  if (alreadyHasOrderedBracketPair) {
+    return host
+  }
+
+  const upToLastSegmentMaybeHost = host.split(':').slice(0, -1).join(':') ?? ''
+  const lastSegmentMaybePort = host.split(':').slice(-1).pop() ?? ''
+
+  if (isValidURL(`http://${host}`)) {
+    return host
+  } else if (isValidURL(`http://[${host}]`)) {
+    return `[${host}]`
+  } else if (
+    isValidURL(`http://[${upToLastSegmentMaybeHost}]:${lastSegmentMaybePort}`)
+  ) {
+    return `[${host}]:${lastSegmentMaybePort}`
+  } else {
+    return host
+  }
 }
 
 /**
@@ -96,7 +136,7 @@ export function getUrlByRequestOptions(options: ResolvedRequestOptions): URL {
 
   // NOTE: as of node >= 17, hosts (including "localhost") can resolve to IPv6
   // addresses, so construct valid URL by surrounding IPv6 host with brackets
-  const baseUrl = `${protocol}//${isRawIPv6Address(host) ? `[${host}]` : host}`
+  const baseUrl = `${protocol}//${uriEncodedHost(host)}`
   debug('base URL:', baseUrl)
 
   const url = options.uri ? new URL(options.uri.href) : new URL(path, baseUrl)

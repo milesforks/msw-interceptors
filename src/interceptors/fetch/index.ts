@@ -53,7 +53,10 @@ export class FetchInterceptor extends Interceptor<HttpRequestEventMap> {
 
       const body = await request.clone().arrayBuffer()
       const isomorphicRequest = new IsomorphicRequest(
-        new URL(url, location.origin),
+        new URL(
+          url,
+          typeof location !== 'undefined' ? location.origin : undefined
+        ),
         {
           body,
           method,
@@ -118,7 +121,16 @@ export class FetchInterceptor extends Interceptor<HttpRequestEventMap> {
 
       this.log('no mocked response received!')
 
-      return pureFetch(request).then(async (response) => {
+      // NOTE: Make sure to properly pass through undici requests with dispatcher
+      // undici accepts an additional `dispatcher` property on `RequestInit`,
+      // which may have been defined in the object passed as `init`, but we
+      // lose it when we instantiate `new Request(input, init)`. So, check if
+      // it was initially provided, and include it in second arg to fetch if so.
+      const maybeUndiciOpts = init?.dispatcher
+        ? ({ dispatcher: init.dispatcher } as RequestInit)
+        : undefined
+
+      return pureFetch(request, maybeUndiciOpts).then(async (response) => {
         const cloneResponse = response.clone()
         this.log('original fetch performed', cloneResponse)
 
@@ -157,5 +169,15 @@ async function normalizeFetchResponse(
     statusText: response.statusText,
     headers: objectToHeaders(headersToObject(response.headers)),
     body: await response.text(),
+  }
+}
+
+declare global {
+  interface RequestInit {
+    /**
+     * Optional property which is valid only in Node v18+ when using undici
+     * see: https://undici.nodejs.org/#/?id=undicifetchinput-init-promise
+     */
+    dispatcher?: import('undici').Agent
   }
 }
